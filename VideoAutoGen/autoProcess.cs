@@ -140,13 +140,17 @@ namespace VideoAutoGen
                 {
                     sw.WriteLine("copy \"{0}\" \"{1}\"", fileMV[0].ToString() + ".video.avs.mp4", outputMP4Name);
                 }
-                else
+                else //用concat將所有avslist.txt內的檔案合併
                 {
                     sw.WriteLine("\"{0}\" -f concat -safe 0 -i \"{1}\" -c copy \"{2}\"", ffmpeg, finalMP4List, outputMP4Name);
+                    string inputMP4Name = outputMP4Name.Replace(".mp4","tmp.mp4");
+                    sw.WriteLine("move \"{0}\" \"{1}\"", outputMP4Name, inputMP4Name); //改名
+                    sw.WriteLine("\"{0}\" -i \"{1}\" -c:v libx264 -profile:v main -level:v 3.1 -preset:v medium -tune:v film -crf:v 22.0 -c:a aac -b:a 256k \"{2}\"", ffmpeg, inputMP4Name, outputMP4Name); //用ffmpeg再轉換一次，避免因為合併聲畫出現問題(電腦播放沒有問題，但盒子播放會卡)。
+                    sw.WriteLine("Del \"{0}\"", inputMP4Name); //刪除臨時mp4
                 }
                 sw.WriteLine("\"{0}\" -o \"{1}\"  \"--forced-track\" \"0:no\" \"--forced-track\" \"1:no\" \"-a\" \"1\" \"-d\" \"0\" \"-S\" \"-T\" \"--no-global-tags\" \"--no-chapters\" \"{2}\" \"--track-order\" \"0:0,0:1\"", mkvtoolnix_n,outputMKVName.Replace("\\","\\\\"),outputMP4Name.Replace("\\", "\\\\"));
                 sw.WriteLine("\"{0}\" -o \"{1}\"  --default-track 1:yes --display-dimensions 1:1280x720 --default-track 2:yes -a 2 -d 1 -S \"{2}\" --track-order 0:1,0:2", mkvtoolnix_o, outputMKVName_final, outputMKVName);
-                sw.WriteLine("del \"{0}\"", outputMKVName);
+                sw.WriteLine("del \"{0}\"", outputMKVName);//刪除舊版本MKV
                 sw.WriteLine("pause");
                 sw.Flush();
             }
