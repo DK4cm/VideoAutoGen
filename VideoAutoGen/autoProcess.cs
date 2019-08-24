@@ -151,7 +151,7 @@ namespace VideoAutoGen
                 sw.WriteLine("\"{0}\" -o \"{1}\"  \"--forced-track\" \"0:no\" \"--forced-track\" \"1:no\" \"-a\" \"1\" \"-d\" \"0\" \"-S\" \"-T\" \"--no-global-tags\" \"--no-chapters\" \"{2}\" \"--track-order\" \"0:0,0:1\"", mkvtoolnix_n,outputMKVName.Replace("\\","\\\\"),outputMP4Name.Replace("\\", "\\\\"));
                 sw.WriteLine("\"{0}\" -o \"{1}\"  --default-track 1:yes --display-dimensions 1:1280x720 --default-track 2:yes -a 2 -d 1 -S \"{2}\" --track-order 0:1,0:2", mkvtoolnix_o, outputMKVName_final, outputMKVName);
                 sw.WriteLine("del \"{0}\"", outputMKVName);//刪除舊版本MKV
-                sw.WriteLine("pause");
+                //sw.WriteLine("pause"); //大部分情況下無須使用
                 sw.Flush();
             }
 
